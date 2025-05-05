@@ -133,7 +133,7 @@ func (e *Executor) executeDropTable(stmt parser.DropTableStatement) (Result, err
 // executeInsert executes an INSERT statement
 func (e *Executor) executeInsert(stmt parser.InsertStatement) (Result, error) {
 	tableName := stmt.TableName()
-
+	
 	// Check if the table exists
 	schema, found := e.catalog.GetTable(tableName)
 	if !found {
@@ -143,14 +143,26 @@ func (e *Executor) executeInsert(stmt parser.InsertStatement) (Result, error) {
 		}, nil
 	}
 
-	// Validate column names
+	// Get columns from the statement
 	columns := stmt.Columns()
-	for _, colName := range columns {
-		if !schema.HasColumn(colName) {
-			return &executionResult{
-				resultType: types.ResultError,
-				err:        fmt.Errorf("column '%s' not found in table '%s'", colName, tableName),
-			}, nil
+	
+	// If no columns were specified, use all columns from the schema in order
+	if len(columns) == 0 {
+		// Get all columns from the table schema
+		allColumns := schema.Columns()
+		columns = make([]string, len(allColumns))
+		for i, col := range allColumns {
+			columns[i] = col.Name()
+		}
+	} else {
+		// Validate the specified column names
+		for _, colName := range columns {
+			if !schema.HasColumn(colName) {
+				return &executionResult{
+					resultType: types.ResultError,
+					err:        fmt.Errorf("column '%s' not found in table '%s'", colName, tableName),
+				}, nil
+			}
 		}
 	}
 

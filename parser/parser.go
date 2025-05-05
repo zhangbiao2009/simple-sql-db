@@ -97,29 +97,47 @@ func (p *SimpleParser) parseDropTable(sql string) (DropTableStatement, error) {
 
 // parseInsert parses an INSERT statement
 func (p *SimpleParser) parseInsert(sql string) (InsertStatement, error) {
-	// INSERT INTO table (col1, col2) VALUES (val1, val2), (val3, val4)
-	r := regexp.MustCompile(`(?i)INSERT\s+INTO\s+(\w+)\s*\(([^)]+)\)\s*VALUES\s*(.+)`)
-	matches := r.FindStringSubmatch(sql)
+	// First try the format with explicit columns: INSERT INTO table (col1, col2) VALUES (val1, val2)
+	r1 := regexp.MustCompile(`(?i)INSERT\s+INTO\s+(\w+)\s*\(([^)]+)\)\s*VALUES\s*(.+)`)
+	matches := r1.FindStringSubmatch(sql)
 
-	if len(matches) != 4 {
-		return nil, errors.New("invalid INSERT syntax")
+	if len(matches) == 4 {
+		tableName := matches[1]
+		
+		// Parse column names
+		colStr := matches[2]
+		columns := splitAndTrim(colStr, ',')
+		
+		// Parse values
+		valuesStr := matches[3]
+		valueGroups := parseValueLists(valuesStr)
+		
+		return &insertStatement{
+			tableName: tableName,
+			columns:   columns,
+			values:    valueGroups,
+		}, nil
 	}
-
-	tableName := matches[1]
-
-	// Parse column names
-	colStr := matches[2]
-	columns := splitAndTrim(colStr, ',')
-
-	// Parse values
-	valuesStr := matches[3]
-	valueGroups := parseValueLists(valuesStr)
-
-	return &insertStatement{
-		tableName: tableName,
-		columns:   columns,
-		values:    valueGroups,
-	}, nil
+	
+	// Try the format without explicit columns: INSERT INTO table VALUES (val1, val2)
+	r2 := regexp.MustCompile(`(?i)INSERT\s+INTO\s+(\w+)\s+VALUES\s+(.+)`)
+	matches = r2.FindStringSubmatch(sql)
+	
+	if len(matches) == 3 {
+		tableName := matches[1]
+		
+		// Parse values
+		valuesStr := matches[2]
+		valueGroups := parseValueLists(valuesStr)
+		
+		return &insertStatement{
+			tableName: tableName,
+			columns:   []string{}, // Empty columns means "use all columns in order"
+			values:    valueGroups,
+		}, nil
+	}
+	
+	return nil, errors.New("invalid INSERT syntax")
 }
 
 // parseUpdate parses an UPDATE statement
