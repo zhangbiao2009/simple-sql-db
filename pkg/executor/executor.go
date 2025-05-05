@@ -3,10 +3,10 @@ package executor
 import (
 	"fmt"
 
-	"github.com/zhangbiao2009/simple-sql-db/catalog"
-	"github.com/zhangbiao2009/simple-sql-db/parser"
-	"github.com/zhangbiao2009/simple-sql-db/storage"
-	"github.com/zhangbiao2009/simple-sql-db/types"
+	"github.com/zhangbiao2009/simple-sql-db/pkg/catalog"
+	"github.com/zhangbiao2009/simple-sql-db/pkg/parser"
+	"github.com/zhangbiao2009/simple-sql-db/pkg/storage"
+	"github.com/zhangbiao2009/simple-sql-db/pkg/types"
 )
 
 // Result represents the result of executing a statement
@@ -133,7 +133,7 @@ func (e *Executor) executeDropTable(stmt parser.DropTableStatement) (Result, err
 // executeInsert executes an INSERT statement
 func (e *Executor) executeInsert(stmt parser.InsertStatement) (Result, error) {
 	tableName := stmt.TableName()
-	
+
 	// Check if the table exists
 	schema, found := e.catalog.GetTable(tableName)
 	if !found {
@@ -145,7 +145,7 @@ func (e *Executor) executeInsert(stmt parser.InsertStatement) (Result, error) {
 
 	// Get columns from the statement
 	columns := stmt.Columns()
-	
+
 	// If no columns were specified, use all columns from the schema in order
 	if len(columns) == 0 {
 		// Get all columns from the table schema

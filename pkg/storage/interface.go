@@ -1,8 +1,8 @@
 package storage
 
 import (
-	"github.com/zhangbiao2009/simple-sql-db/catalog"
-	"github.com/zhangbiao2009/simple-sql-db/parser"
+	"github.com/zhangbiao2009/simple-sql-db/pkg/catalog"
+	"github.com/zhangbiao2009/simple-sql-db/pkg/parser"
 )
 
 // Storage is the interface for the storage engine

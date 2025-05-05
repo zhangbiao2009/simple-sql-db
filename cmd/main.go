@@ -8,7 +8,7 @@ import (
 	"strings"
 
 	"github.com/chzyer/readline"
-	"github.com/zhangbiao2009/simple-sql-db/db"
+	"github.com/zhangbiao2009/simple-sql-db/pkg/db"
 )
 
 const (

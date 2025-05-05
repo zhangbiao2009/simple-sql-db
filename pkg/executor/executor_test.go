@@ -3,10 +3,10 @@ package executor
 import (
 	"testing"
 
-	"github.com/zhangbiao2009/simple-sql-db/catalog"
-	"github.com/zhangbiao2009/simple-sql-db/parser"
-	"github.com/zhangbiao2009/simple-sql-db/storage"
-	"github.com/zhangbiao2009/simple-sql-db/types"
+	"github.com/zhangbiao2009/simple-sql-db/pkg/catalog"
+	"github.com/zhangbiao2009/simple-sql-db/pkg/parser"
+	"github.com/zhangbiao2009/simple-sql-db/pkg/storage"
+	"github.com/zhangbiao2009/simple-sql-db/pkg/types"
 )
 
 // Mock implementations for testing

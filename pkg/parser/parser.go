@@ -6,7 +6,7 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/zhangbiao2009/simple-sql-db/types"
+	"github.com/zhangbiao2009/simple-sql-db/pkg/types"
 )
 
 // SimpleParser implements the Parser interface
@@ -103,40 +103,40 @@ func (p *SimpleParser) parseInsert(sql string) (InsertStatement, error) {
 
 	if len(matches) == 4 {
 		tableName := matches[1]
-		
+
 		// Parse column names
 		colStr := matches[2]
 		columns := splitAndTrim(colStr, ',')
-		
+
 		// Parse values
 		valuesStr := matches[3]
 		valueGroups := parseValueLists(valuesStr)
-		
+
 		return &insertStatement{
 			tableName: tableName,
 			columns:   columns,
 			values:    valueGroups,
 		}, nil
 	}
-	
+
 	// Try the format without explicit columns: INSERT INTO table VALUES (val1, val2)
 	r2 := regexp.MustCompile(`(?i)INSERT\s+INTO\s+(\w+)\s+VALUES\s+(.+)`)
 	matches = r2.FindStringSubmatch(sql)
-	
+
 	if len(matches) == 3 {
 		tableName := matches[1]
-		
+
 		// Parse values
 		valuesStr := matches[2]
 		valueGroups := parseValueLists(valuesStr)
-		
+
 		return &insertStatement{
 			tableName: tableName,
 			columns:   []string{}, // Empty columns means "use all columns in order"
 			values:    valueGroups,
 		}, nil
 	}
-	
+
 	return nil, errors.New("invalid INSERT syntax")
 }
 

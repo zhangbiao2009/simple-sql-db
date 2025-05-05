@@ -3,7 +3,7 @@ package parser
 import (
 	"testing"
 
-	"github.com/zhangbiao2009/simple-sql-db/types"
+	"github.com/zhangbiao2009/simple-sql-db/pkg/types"
 )
 
 func TestParseCreateTable(t *testing.T) {

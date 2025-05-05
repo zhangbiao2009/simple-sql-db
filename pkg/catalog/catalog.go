@@ -4,8 +4,8 @@ import (
 	"errors"
 	"sync"
 
-	"github.com/zhangbiao2009/simple-sql-db/parser"
-	"github.com/zhangbiao2009/simple-sql-db/types"
+	"github.com/zhangbiao2009/simple-sql-db/pkg/parser"
+	"github.com/zhangbiao2009/simple-sql-db/pkg/types"
 )
 
 // MemoryCatalog is an in-memory implementation of the Catalog interface

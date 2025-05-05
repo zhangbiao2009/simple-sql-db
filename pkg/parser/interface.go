@@ -1,7 +1,7 @@
 package parser
 
 import (
-	"github.com/zhangbiao2009/simple-sql-db/types"
+	"github.com/zhangbiao2009/simple-sql-db/pkg/types"
 )
 
 // Parser is responsible for parsing SQL strings
